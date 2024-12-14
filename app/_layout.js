@@ -3,8 +3,6 @@ import React from 'react';
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { AuthProvider } from './AuthContext';
-import LogoutButton from './components/logout';
-import UpdateCheckScreen from './components/UpdateScreenCheck';
 import { Provider as PaperProvider } from "react-native-paper";
 import theme from './theme';
 import ErrorBoundary from 'react-native-error-boundary';
