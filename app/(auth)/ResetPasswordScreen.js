@@ -17,9 +17,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import theme from '../theme';
-import AttendanceNotification from '../components/AttendanceAlert';
-import AttendanceLoader from '../components/Loader';
-
 const { width } = Dimensions.get('window');
 
 export default function ResetPasswordScreen() {
@@ -29,12 +26,7 @@ export default function ResetPasswordScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [notification, setNotification] = useState(null);
 
-  const showNotification = (message, type) => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
-  };
 
   const router = useRouter();
   const API_URL = process.env.API_URL;
@@ -42,7 +34,6 @@ export default function ResetPasswordScreen() {
   const handleSubmit = async () => {
 
     if (!identifier && !oldPassword && !newPassword) {
-      showNotification('Please enter username and passwords', 'error')
       return null
     }
     setIsLoading(true);
@@ -50,14 +41,11 @@ export default function ResetPasswordScreen() {
 
       const response = await axios.post(`${API_URL}/api/reset-password`, { identifier, oldPassword, newPassword });
       if (response.status === 200) {
-        showNotification('Password reset successfully', 'success');
         setTimeout(() => router.push("/login"), 3000);
       } else {
-        showNotification('Password reset failed', 'error');
       }
     } catch (error) {
       console.error('Failed to reset password', error);
-      showNotification('Failed to reset password', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -146,14 +134,7 @@ export default function ResetPasswordScreen() {
         </View>
       </View>
 
-      <AttendanceLoader isVisible={isLoading} />
-      {notification && (
-        <AttendanceNotification
-          message={notification.message || ''}
-          type={notification.type || 'info'}
-          onDismiss={() => setNotification(null)}
-        />
-      )}
+      
     </KeyboardAvoidingView>
   );
 };

@@ -19,8 +19,6 @@ import {
 } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '.././theme'
-import AttendanceNotification from '../components/AttendanceAlert';
-import AttendanceLoader from '../components/Loader';
 
 const { width } = Dimensions.get('window');
 
@@ -30,12 +28,6 @@ export default function LoginScreen() {
   const [role, setRole] = useState('faculty');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [notification, setNotification] = useState(null);
-
-  const showNotification = (message, type) => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
-  };
 
   const { login, user, loading: authLoading } = useContext(AuthContext);
   const router = useRouter();
@@ -58,7 +50,6 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if(!username && !password){
-      showNotification( 'Please enter username and password', 'error'  )
       return null 
     }
     
@@ -68,9 +59,7 @@ export default function LoginScreen() {
         console.log(username,role,password);
         await login(username, password, role);
     
-      showNotification(  'Password reset successfully', 'success'  );
     } catch (error) {
-      showNotification( 'Invalid credentials', 'error'  )
     } 
       finally {
       setIsLoading(false);
@@ -155,15 +144,7 @@ export default function LoginScreen() {
           </Button>
         </View>
       </View>
-      <AttendanceLoader isVisible={isLoading} />
       
-      {notification && (
-  <AttendanceNotification
-    message={notification.message || ''}
-    type={notification.type || 'info'}
-    onDismiss={() => setNotification(null)}
-  />
-)}
     </KeyboardAvoidingView>
   );
 }

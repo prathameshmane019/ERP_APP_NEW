@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import ErrorBoundary from 'react-native-error-boundary';
-import AttendanceLoader from './components/Loader';
 import AuthContext from './AuthContext';
 
 export default function HomeScreen() {
@@ -37,7 +36,6 @@ export default function HomeScreen() {
   return ( 
     <ErrorBoundary FallbackComponent={CustomFallback}>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <AttendanceLoader isVisible={loading}/>
     </View>
     </ErrorBoundary>
   );
