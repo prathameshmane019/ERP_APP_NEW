@@ -63,14 +63,14 @@ export default function UpdateAttendance() {
       });
 
       const { subject, students, attendanceRecord } = response.data;
-      setSubjectDetails(subject);
+      setSubjectDetails(subject ||null);
       setStudents(students || []);
-      setAttendanceRecord(attendanceRecord);
+      setAttendanceRecord(attendanceRecord || null);
       if (attendanceRecord) {
-        setSelectedKeys(new Set(attendanceRecord.records.map(r => r.status === "present" ? r.student : null).filter(Boolean)));
+        setSelectedKeys(new Set(attendanceRecord.records?.map(r => r.status === "present" ? r.student : null).filter(Boolean)));
         setSelectedContentIds(attendanceRecord.contents || []);
         if (subject.subType === 'tg') {
-          setPointInputs(attendanceRecord.pointsDiscussed.map((point, index) => ({ id: index, value: point })) || [{ id: Date.now(), value: '' }]);
+          setPointInputs(attendanceRecord.pointsDiscussed.map((point, index) => ({ id: index, value: point })) || [{ id: Date.now(), value: '' }] || []);
         }
       } else {
         setSelectedKeys(new Set());

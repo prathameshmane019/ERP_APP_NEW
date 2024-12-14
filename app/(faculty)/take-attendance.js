@@ -5,7 +5,6 @@ import { Provider as PaperProvider, Card, Title, Paragraph, Button, Checkbox, Li
 import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import getUserData from '../utils/getUser';
 import theme from '../theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StudentList from '../components/StudentListTable';
