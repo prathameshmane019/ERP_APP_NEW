@@ -33,8 +33,8 @@ export default function Layout() {
             <Stack.Screen name="(faculty)/menu" options={{ headerShown: false }}  />
             <Stack.Screen name="(faculty)/take-attendance" options={{ title: 'Take Attendance' }} />
             <Stack.Screen name="(faculty)/update-attendance" options={{ title: 'Update Attendance' }} />
-            <Stack.Screen name="(student)/view" options={{ title: 'Display Attendance' }} />
-            <Stack.Screen name="update-info/index" options={{ title: 'Update Information' }} />
+            {/* <Stack.Screen name="(student)/view" options={{ title: 'Display Attendance' }} /> */}
+            {/* <Stack.Screen name="update-info/index" options={{ title: 'Update Information' }} /> */}
           </Stack>      
         </PaperProvider>
       </AuthProvider>

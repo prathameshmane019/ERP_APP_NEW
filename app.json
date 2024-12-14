@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "erp-app-2",
+    "scheme": "erp",
+    "name": "ERP",
     "slug": "erp-app-2",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -35,6 +36,7 @@
       "eas": {
         "projectId": "17efda5f-d283-4925-9705-bd7b63cc8f43"
       }
-    }
+    },
+    "owner": "maneprathamesh019"
   }
 }
