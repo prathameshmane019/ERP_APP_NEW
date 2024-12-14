@@ -4,7 +4,7 @@ import { View, ScrollView, Alert, StyleSheet, TextInput, Pressable } from 'react
 import { Provider as PaperProvider, Card, Title, Paragraph, Button, Checkbox, List, Divider, DataTable, IconButton, Text } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import axios from 'axios';
+
 import getUserData from '../utils/getUser';
 import theme from '../theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -15,6 +15,7 @@ import AttendanceLoader from '../components/Loader';
 import AttendanceNotification from '../components/AttendanceAlert';
 import { useContext } from 'react';
 import AuthContext from '../AuthContext';
+import api from '../../api';
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const AttendanceForm = ({
@@ -205,7 +206,7 @@ export default function TakeAttendance() {
     setLoading(true)
     try {
 
-      const response = await axios.get(`${API_URL}/api/utils/available-sessions?subjectId=${subjectId}&batchId=${batchId || ''}&date=${date.toISOString().split('T')[0]}`);
+      const response = await api.get(`${API_URL}/api/utils/available-sessions?subjectId=${subjectId}&batchId=${batchId || ''}&date=${date.toISOString().split('T')[0]}`);
       setAvailableSessions(response.data.availableSessions);
     } catch (error) {
       console.error('Error fetching available sessions:', error);
@@ -219,7 +220,7 @@ export default function TakeAttendance() {
   const fetchSubjectDetails = useCallback(async (subjectId, batchId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/api/v2/utils/attendance-data?_id=${subjectId}&batchId=${batchId || ''}`);
+      const response = await api.get(`${API_URL}/api/v2/utils/attendance-data?_id=${subjectId}&batchId=${batchId || ''}`);
       const { subject, students } = response.data;
       setSubjectDetails(subject);
       setStudents(students || []);
@@ -273,7 +274,7 @@ export default function TakeAttendance() {
 
     setLoading(true);
     try { 
-      const response = await axios.put(`${API_URL}/api/v2/attendance`, attendanceData);
+      const response = await api.put(`${API_URL}/api/v2/attendance`, attendanceData);
     
       showNotification("Attendance submitted successfully", "success");
 
