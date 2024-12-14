@@ -61,58 +61,51 @@ export const AuthProvider = ({ children }) => {
     console.log('AuthProvider Initial Load');
     console.log('Current API_URL:', API_URL);
     
-    const loadUser = async () => {
-      try {
-        // Extended logging
-        console.log('Starting user load process');
-        
-        // Retrieve token and user data
-        const token = await AsyncStorage.getItem('token');
-        const storedUserData = await AsyncStorage.getItem('userData');
-        
-        console.log('Retrieved Token:', !!token);
-        console.log('Retrieved User Data:', !!storedUserData);
+    // In AuthContext.js
+const loadUser = async () => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
-        if (token) {
-          try {
-           
-            // Validate token with backend
-            console.log('Attempting to validate token via:', `${API_URL}/api/applogin`);
-            
-            const { data } = await api.get(`${API_URL}/api/applogin`);
-            console.log('Token Validation Response:', data);
+    // Set token in axios defaults
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            if (storedUserData) {
-              const parsedUserData = JSON.parse(storedUserData);
-              console.log('Parsed User Data:', parsedUserData);
-              setUser(parsedUserData);
-            }
-          } catch (validateError) {
-            console.error('Token Validation Error:', {
-              message: validateError.message,
-              response: validateError.response?.data,
-              status: validateError.response?.status
-            });
-
-            // Clear invalid token and user data
-            await AsyncStorage.removeItem('token');
-            await AsyncStorage.removeItem('userData');
-            setUser(null);
-          }
-        } else {
-          console.log('No token found, user not authenticated');
-        }
-      } catch (error) {
-        console.error('Critical Error in User Load:', {
-          message: error.message,
-          stack: error.stack
-        });
-      } finally {
-        console.log('Setting loading to false');
-        setLoading(false);
+    try {
+      const { data } = await api.get('/api/applogin');
+      const storedUserData = await AsyncStorage.getItem('userData');
+      
+      if (storedUserData) {
+        setUser(JSON.parse(storedUserData));
       }
-    };
+    } catch (error) {
+      // Clear invalid credentials
+      await AsyncStorage.multiRemove(['token', 'userData']);
+      delete api.defaults.headers.common['Authorization'];
+      setUser(null);
+    }
+  } catch (error) {
+    console.error('Auth Error:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
+// Add error interceptor in api.js
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      // Clear auth state on 401
+      AsyncStorage.multiRemove(['token', 'userData']);
+      delete api.defaults.headers.common['Authorization'];
+    }
+    return Promise.reject(error);
+  }
+);
     loadUser();
   }, []);
 
